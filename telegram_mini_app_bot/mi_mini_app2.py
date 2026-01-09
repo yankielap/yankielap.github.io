@@ -2,9 +2,9 @@ import telebot
 import json
 from telebot import types
 
-TOKEN = 'TU_TOKEN_AQUI'
+TOKEN = '8159536193:AAEGK6gNB6Wl1hojOjnzoWUNgmiTDHU7lVw'
 bot = telebot.TeleBot(TOKEN)
-URL_APP = 'https://tu-sitio.com/index.html' # Cambia esto por tu URL real
+WEB_APP_URL = 'https://yankielap.github.io/telegram_mini_app_web'
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):

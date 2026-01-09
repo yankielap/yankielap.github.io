@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
+        }
+        button {
+            padding: 10px 20px;
+            background: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<h1 id="user-name">¡Hola!</h1>
+<p>Esta es una Mini App integrada.</p>
+<button id="main-btn">Enviar datos al Bot</button>
+
+<script>
+    const tg = window.Telegram.WebApp;
+    tg.expand(); // Expande la app a pantalla completa
+
+    // Mostrar el nombre del usuario desde los datos de Telegram
+    const user = tg.initDataUnsafe?.user;
+    if (user) {
+        document.getElementById('user-name').innerText = `¡Hola, ${user.first_name}!`;
+    }
+
+    // Botón para cerrar la app y enviar datos
+    document.getElementById('main-btn').addEventListener('click', () => {
+        tg.sendData("Datos desde la Mini App"); // Envía un mensaje al bot
+        tg.close(); // Cierra la app
+    });
+</script>
+</body>
+</html>
