@@ -4,7 +4,7 @@ from telebot import types
 
 TOKEN = '8159536193:AAEGK6gNB6Wl1hojOjnzoWUNgmiTDHU7lVw'
 bot = telebot.TeleBot(TOKEN)
-WEB_APP_URL = 'https://yankielap.github.io/telegram_mini_app_web'
+URL_APP = 'https://yankielap.github.io/telegram_mini_app_web'
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
