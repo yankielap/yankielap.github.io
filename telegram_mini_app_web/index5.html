@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { font-family: sans-serif; background: var(--tg-theme-bg-color); color: var(--tg-theme-text-color); padding: 15px; }
+        .menu-item {
+            background: var(--tg-theme-secondary-bg-color);
+            padding: 15px; border-radius: 10px; margin-bottom: 10px; cursor: pointer;
+            border: 1px solid transparent; transition: 0.2s;
+        }
+        .menu-item:active { border: 1px solid var(--tg-theme-button-color); }
+        .hidden { display: none; }
+        .price { float: right; color: var(--tg-theme-hint-color); }
+    </style>
+</head>
+<body>
+<div id="main-menu">
+    <h3>¿Qué información deseas solicitar?</h3>
+    <div class="menu-item" onclick="selectOption('Estado de Cuenta', 'consultar_saldo')">
+        📄 Estado de Cuenta <span class="price">Solicitar</span>
+    </div>
+    <div class="menu-item" onclick="selectOption('Soporte Técnico', 'ticket_soporte')">
+        🛠️ Abrir Ticket Soporte <span class="price">Urgente</span>
+    </div>
+    <div class="menu-item" onclick="selectOption('Nomenclador PDF', 'enviar_pdf')">
+        📥 Descargar Catálogo <span class="price">PDF</span>
+    </div>
+</div>
+
+<div id="confirm-screen" class="hidden">
+    <h3 id="selected-title"></h3>
+    <div style="margin: 20px 0;">
+        <label>Introduce tu PIN de acceso:</label><br>
+        <input type="password" id="user-pin" pattern="\[0-9\]*" inputmode="numeric"
+               style="font-size: 24px; text-align: center; width: 120px; letter-spacing: 5px;">
+    </div>
+    <p id="pin-error" style="color: red; display: none;">❌ PIN incorrecto</p>
+</div>
+
+<script>
+    const tg = window.Telegram.WebApp;
+    let currentAction = null;
+
+    function selectOption(title, action) {
+        currentAction = action;
+        document.getElementById('main-menu').classList.add('hidden');
+        document.getElementById('confirm-screen').classList.remove('hidden');
+        document.getElementById('selected-title').innerText = "Has seleccionado: " + title;
+
+        // Configurar botones nativos de Telegram
+        tg.MainButton.setText("CONFIRMAR SOLICITUD");
+        tg.MainButton.show();
+        tg.BackButton.show();
+    }
+
+    // Manejar el botón de retroceso nativo
+    tg.BackButton.onClick(() => {
+        document.getElementById('main-menu').classList.remove('hidden');
+        document.getElementById('confirm-screen').classList.add('hidden');
+        tg.MainButton.hide();
+        tg.BackButton.hide();
+    });
+
+    // El PIN "secreto" que podrías incluso pasar por URL como vimos antes
+    const PIN_CORRECTO = "1234";
+
+    tg.MainButton.onClick(() => {
+        const pinIngresado = document.getElementById('user-pin').value;
+
+        if (pinIngresado === PIN_CORRECTO) {
+            // Confirmación nativa de Telegram antes de cerrar
+            tg.showConfirm("¿Estás seguro de solicitar esta acción?", (confirmed) => {
+                if (confirmed) {
+                    const data = {
+                        action: currentAction,
+                        status: "verified"
+                    };
+                    tg.sendData(JSON.stringify(data));
+                }
+            });
+        } else {
+            document.getElementById('pin-error').style.display = 'block';
+            tg.HapticFeedback.notificationOccurred('error'); // Vibración de error
+        }
+    });
+</script>
+</body>
+</html>
