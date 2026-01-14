@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soporte Técnico App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg: var(--tg-theme-bg-color, #ffffff);
+            --text: var(--tg-theme-text-color, #222222);
+            --hint: var(--tg-theme-hint-color, #999999);
+            --btn: var(--tg-theme-button-color, #2481cc);
+            --btn-text: var(--tg-theme-button-text-color, #ffffff);
+        }
+        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        .page { display: none; }
+        .active { display: block; }
+
+        /* Menú de Navegación */
+        nav { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 1px solid var(--hint); padding-bottom: 10px; }
+        nav span { cursor: pointer; font-weight: bold; color: var(--hint); }
+        nav span.active-tab { color: var(--btn); border-bottom: 2px solid var(--btn); }
+
+        /* Formulario */
+        .form-group { margin-bottom: 15px; text-align: left; }
+        label { display: block; font-size: 0.9em; color: var(--hint); margin-bottom: 5px; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid var(--hint); border-radius: 8px; box-sizing: border-box; background: var(--bg); color: var(--text); }
+
+        .user-card { background: rgba(0,0,0,0.05); padding: 15px; border-radius: 12px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div id="home" class="page active">
+    <h3>Nuevo Reporte</h3>
+    <div class="form-group">
+        <label>Selecciona el servicio (Cargado desde servidor):</label>
+        <select id="mi-nomenclador">
+            <option value="">Cargando opciones...</option>
+        </select>
+    </div>
+</div>
+
+<script>
+    // Dentro de tu <script> en el index.html
+
+    function cargarDatosDesdeURL() {
+        // 1. Obtener los parámetros de la URL
+        const params = new URLSearchParams(window.location.search);
+        const dataEncoded = params.get('d');
+
+        if (dataEncoded) {
+            try {
+                // 2. Decodificar Base64 y convertir a objeto JSON
+                const jsonString = atob(dataEncoded);
+                const nomenclador = JSON.parse(jsonString);
+
+                // 3. Llenar el select o menú
+                const select = document.getElementById('mi-nomenclador');
+                nomenclador.forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.id;
+                    opt.text = `${item.n} - $${item.p}`;
+                    select.appendChild(opt);
+                });
+            } catch (e) {
+                console.error("Error al decodificar datos", e);
+            }
+        }
+    }
+
+    // Ejecutar al cargar la página
+    window.onload = cargarDatosDesdeURL;
+</script>
+</body>
+</html>
