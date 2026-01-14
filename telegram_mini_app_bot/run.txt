@@ -7,3 +7,6 @@ cd telegram_mini_app_bot && python3 -m venv venv && source venv/bin/activate
 pip install flask pyTelegramBotAPI flask-cors
 python3 mi_mini_app3.py
 ln -sf index3.html index.html
+
+python3 mi_mini_app4.py
+ln -sf index4.html index.html
